@@ -1,20 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
 
-export default function SignUpScreen({ navigation }) {
+export default function SignInScreen({ navigation }) {
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleSignUp = () => {
-    if (!username || !email || !password || !confirmPassword) {
-      alert('Please fill in all fields!');
-    } else if (password !== confirmPassword) {
-      alert('Passwords do not match!');
+  const handleSignIn = () => {
+    if (username && password) {
+      alert(`Welcome back, ${username}!`);
     } else {
-      alert('Sign-Up Successful!');
-      navigation.goBack(); // Navigate back to the Sign-In screen
+      alert('Please enter both username and password!');
     }
   };
 
@@ -27,7 +22,7 @@ export default function SignUpScreen({ navigation }) {
       />
 
       {/* Title */}
-      <Text style={styles.title}>Sign Up</Text>
+      <Text style={styles.title}>Log In</Text>
 
       {/* Input Fields */}
       <TextInput
@@ -39,39 +34,23 @@ export default function SignUpScreen({ navigation }) {
       />
       <TextInput
         style={styles.input}
-        placeholder="Email"
-        placeholderTextColor="#704214"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Create Password"
+        placeholder="Password"
         placeholderTextColor="#704214"
         secureTextEntry
         value={password}
         onChangeText={setPassword}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Re-write Password"
-        placeholderTextColor="#704214"
-        secureTextEntry
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-      />
 
-      {/* Sign-Up Button */}
-      <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-        <Text style={styles.buttonText}>Sign Up</Text>
+      {/* Sign In Button */}
+      <TouchableOpacity style={styles.button} onPress={handleSignIn}>
+        <Text style={styles.buttonText}>Log In</Text>
       </TouchableOpacity>
 
       {/* Footer */}
       <Text style={styles.footerText}>
-        If you already have an account,{' '}
-        <Text style={styles.link} onPress={() => navigation.goBack()}>
-          Log In
+        If you haven’t created an account,{' '}
+        <Text style={styles.link} onPress={() => navigation.navigate('SignUp')}>
+          Sign Up
         </Text>{' '}
         now
       </Text>
@@ -130,7 +109,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   link: {
-    color: '#FF9933', // Orange for the link
+    color: 'green', // Orange for the link
     fontWeight: 'bold',
   },
 });
