@@ -133,4 +133,4 @@ const styles = StyleSheet.create({
     color: '#FF9933', // Orange for the link
     fontWeight: 'bold',
   },
-});
+});      
