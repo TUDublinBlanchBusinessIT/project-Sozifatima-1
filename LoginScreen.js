@@ -7,7 +7,8 @@ export default function SignInScreen({ navigation }) {
 
   const handleSignIn = () => {
     if (username && password) {
-      alert(`Welcome back, ${username}!`);
+      // Navigate to HomeScreen
+      navigation.navigate('Home');
     } else {
       alert('Please enter both username and password!');
     }

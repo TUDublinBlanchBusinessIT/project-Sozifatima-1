@@ -8,13 +8,12 @@ export default function SignUpScreen({ navigation }) {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleSignUp = () => {
-    if (!username || !email || !password || !confirmPassword) {
-      alert('Please fill in all fields!');
-    } else if (password !== confirmPassword) {
-      alert('Passwords do not match!');
+    if (username && email && password) {
+      alert(`Welcome, ${username}! Your account has been created.`);
+      // Navigate to HomeScreen
+      navigation.navigate('Home');
     } else {
-      alert('Sign-Up Successful!');
-      navigation.goBack(); // Navigate back to the Sign-In screen
+      alert('Please fill in all the fields!');
     }
   };
 
