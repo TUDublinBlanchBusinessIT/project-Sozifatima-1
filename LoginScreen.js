@@ -1,53 +1,57 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, Image } from 'react-native';
+import { signInWithEmailAndPassword } from 'firebase/auth'; // Firebase Authentication
+import { auth } from './firebaseconfig'; // Import Firebase auth from firebaseconfig.js
 
 export default function SignInScreen({ navigation }) {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSignIn = () => {
-    if (username && password) {
-      // Navigate to HomeScreen
-      navigation.navigate('Home');
+  const handleLogin = async () => {
+    if (email && password) {
+      try {
+        // Sign in with email and password using Firebase Authentication
+        await signInWithEmailAndPassword(auth, email, password);
+        
+        // If sign-in is successful, navigate to HomeScreen
+        Alert.alert('Success', 'You are now logged in!');
+        navigation.navigate('Home'); // Navigate to HomeScreen on successful login
+      } catch (error) {
+        // Show the error if login fails
+        Alert.alert('Login Error', error.message);
+      }
     } else {
-      alert('Please enter both username and password!');
+      alert('Please enter both email and password!');
     }
   };
 
   return (
     <View style={styles.container}>
-      {/* Logo */}
       <Image
         source={require('./assets/logo.png')} // Replace with your logo file path
         style={styles.logo}
       />
 
-      {/* Title */}
       <Text style={styles.title}>Log In</Text>
 
-      {/* Input Fields */}
       <TextInput
         style={styles.input}
-        placeholder="Username"
-        placeholderTextColor="#704214"
-        value={username}
-        onChangeText={setUsername}
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail} // Update the email state
       />
       <TextInput
         style={styles.input}
         placeholder="Password"
-        placeholderTextColor="#704214"
         secureTextEntry
         value={password}
-        onChangeText={setPassword}
+        onChangeText={setPassword} // Update the password state
       />
 
-      {/* Sign In Button */}
-      <TouchableOpacity style={styles.button} onPress={handleSignIn}>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Log In</Text>
       </TouchableOpacity>
 
-      {/* Footer */}
       <Text style={styles.footerText}>
         If you haven’t created an account,{' '}
         <Text style={styles.link} onPress={() => navigation.navigate('SignUp')}>
@@ -85,7 +89,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 15,
     marginBottom: 15,
-    borderColor: '#C7A17A', // Light brown border
+    borderColor: '#C7A17A',
     borderWidth: 1,
     fontSize: 16,
     color: '#704214',
@@ -93,7 +97,7 @@ const styles = StyleSheet.create({
   button: {
     width: '25%',
     height: 50,
-    backgroundColor: '#FF9933', // Orange button
+    backgroundColor: '#FF9933',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,

@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
+import { createUserWithEmailAndPassword } from 'firebase/auth'; // Import from Firebase Authentication
+import { auth, db } from './firebaseconfig'; // Import Firebase auth and Firestore
+import { doc, setDoc } from 'firebase/firestore'; // Firestore functions
 
 export default function SignUpScreen({ navigation }) {
   const [username, setUsername] = useState('');
@@ -7,25 +10,53 @@ export default function SignUpScreen({ navigation }) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleSignUp = () => {
-    if (username && email && password) {
-      alert(`Welcome, ${username}! Your account has been created.`);
-      // Navigate to HomeScreen
-      navigation.navigate('Home');
+  // Function to add user data to Firestore
+  const addUserData = async (userId, username, email) => {
+    try {
+      await setDoc(doc(db, "SignUp", userId), {
+        username: username,
+        email: email
+      });
+      console.log("User data added to Firestore");
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
+
+  // Function to handle the sign-up process
+  const handleSignUp = async () => {
+    if (username && email && password && confirmPassword) {
+      if (password !== confirmPassword) {
+        Alert.alert('Error', 'Passwords do not match!');
+        return;
+      }
+
+      try {
+        // Create user with email and password using Firebase Authentication
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Save additional user information (username, email) to Firestore
+        await addUserData(user.uid, username, email);
+
+        alert('Success', 'Account created successfully!');
+        Alert.alert('Success', 'Account created successfully!');
+        navigation.navigate('Login'); // Navigate to Login screen after successful sign-up
+      } catch (error) {
+        Alert.alert('Error', error.message); // Show error message if something went wrong
+      }
     } else {
-      alert('Please fill in all the fields!');
+      Alert.alert('Error', 'Please fill in all the fields!');
     }
   };
 
   return (
     <View style={styles.container}>
-      {/* Logo */}
       <Image
         source={require('./assets/logo.png')} // Replace with your logo file path
         style={styles.logo}
       />
 
-      {/* Title */}
       <Text style={styles.title}>Sign Up</Text>
 
       {/* Input Fields */}
@@ -132,4 +163,4 @@ const styles = StyleSheet.create({
     color: '#FF9933', // Orange for the link
     fontWeight: 'bold',
   },
-});      
+});
