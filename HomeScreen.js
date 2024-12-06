@@ -1,22 +1,15 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   const [selectedService, setSelectedService] = useState('');
-  const [cheapestOptions, setCheapestOptions] = useState([]);
+
+  useEffect(() => {
+    console.log("HomeScreen rendered");
+  }, []);
 
   const handleSelectService = (service) => {
     setSelectedService(service);
-
-    // Define the options for the cheapest items
-    const options = {
-        Deliveroo: ['Delivery Fee - €2.50'],
-        'Just Eats': ['Delivery Fee - €4.00 '],
-        'Uber Eats': ['Delivery Fee  - €6.00'],
-    };
-
-    // Set the cheapest options for the selected service
-    setCheapestOptions(options[service] || []);
   };
 
   const handleDelivery = () => {
@@ -29,12 +22,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Navigation Bar */}
-      <View style={styles.navBar}>
-        <Text style={styles.navItem}>Home</Text>
-        <Text style={styles.navItem}>Discount</Text>
-        <Text style={styles.navItem}>Profile</Text>
-      </View>
+      <Text style={styles.title}>Home Screen</Text>
 
       {/* Search Bar */}
       <TextInput
@@ -52,20 +40,8 @@ export default function HomeScreen() {
           ]}
           onPress={() => handleSelectService('Deliveroo')}
         >
-          <Text style={styles.serviceText}>
-            {selectedService === 'Deliveroo' ? '✔ ' : ''}Deliveroo
-          </Text>
-          <Text style={styles.serviceTime}>20 minutes</Text>
+          <Text style={styles.serviceText}>Deliveroo</Text>
         </TouchableOpacity>
-        {selectedService === 'Deliveroo' && (
-          <View style={styles.dropdown}>
-            {cheapestOptions.map((option, index) => (
-              <Text key={index} style={styles.dropdownItem}>
-                {option}
-              </Text>
-            ))}
-          </View>
-        )}
 
         <TouchableOpacity
           style={[
@@ -74,20 +50,8 @@ export default function HomeScreen() {
           ]}
           onPress={() => handleSelectService('Just Eats')}
         >
-          <Text style={styles.serviceText}>
-            {selectedService === 'Just Eats' ? '✔ ' : ''}Just Eats
-          </Text>
-          <Text style={styles.serviceTime}>45 minutes</Text>
+          <Text style={styles.serviceText}>Just Eats</Text>
         </TouchableOpacity>
-        {selectedService === 'Just Eats' && (
-          <View style={styles.dropdown}>
-            {cheapestOptions.map((option, index) => (
-              <Text key={index} style={styles.dropdownItem}>
-                {option}
-              </Text>
-            ))}
-          </View>
-        )}
 
         <TouchableOpacity
           style={[
@@ -96,25 +60,21 @@ export default function HomeScreen() {
           ]}
           onPress={() => handleSelectService('Uber Eats')}
         >
-          <Text style={styles.serviceText}>
-            {selectedService === 'Uber Eats' ? '✔ ' : ''}Uber Eats
-          </Text>
-          <Text style={styles.serviceTime}>25 minutes</Text>
+          <Text style={styles.serviceText}>Uber Eats</Text>
         </TouchableOpacity>
-        {selectedService === 'Uber Eats' && (
-          <View style={styles.dropdown}>
-            {cheapestOptions.map((option, index) => (
-              <Text key={index} style={styles.dropdownItem}>
-                {option}
-              </Text>
-            ))}
-          </View>
-        )}
       </ScrollView>
 
       {/* Deliver Button */}
       <TouchableOpacity style={styles.deliverButton} onPress={handleDelivery}>
         <Text style={styles.deliverButtonText}>Deliver</Text>
+      </TouchableOpacity>
+
+      {/* View Discounts Button */}
+      <TouchableOpacity
+        style={styles.deliverButton}
+        onPress={() => navigation.navigate('Discounts')} // Navigate to Discounts screen
+      >
+        <Text style={styles.deliverButtonText}>View Discounts</Text>
       </TouchableOpacity>
     </View>
   );
@@ -126,22 +86,11 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#f7f8fa',
   },
-  navBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 20,
-    paddingVertical: 10,
-    backgroundColor: '#fff',
-    borderRadius: 15,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
-  },
-  navItem: {
-    fontSize: 16,
+  title: {
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
+    marginBottom: 20,
   },
   searchBar: {
     width: '100%',
@@ -152,49 +101,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     backgroundColor: '#fff',
     marginBottom: 20,
-    fontSize: 16,
-    color: '#333',
   },
   serviceItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     padding: 15,
     marginBottom: 15,
     backgroundColor: '#fff',
-    borderRadius: 15,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
-  },
-  selectedService: {
-    borderColor: '#ff914d',
-    borderWidth: 2,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#ddd',
   },
   serviceText: {
     fontSize: 16,
     color: '#333',
   },
-  serviceTime: {
-    fontSize: 14,
-    color: '#888',
-  },
-  dropdown: {
-    backgroundColor: '#fff',
-    padding: 10,
-    borderRadius: 10,
-    marginTop: -10,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
-  },
-  dropdownItem: {
-    fontSize: 14,
-    color: '#555',
-    marginBottom: 5,
+  selectedService: {
+    backgroundColor: '#ff914d',
   },
   deliverButton: {
     width: '100%',
@@ -204,10 +125,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 25,
     marginTop: 20,
-    shadowColor: '#ff914d',
-    shadowOpacity: 0.4,
-    shadowRadius: 8,
-    elevation: 5,
   },
   deliverButtonText: {
     color: '#fff',
