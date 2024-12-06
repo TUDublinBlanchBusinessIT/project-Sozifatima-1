@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 
 export default function DiscountsScreen({ navigation }) {
   const [selectedDiscount, setSelectedDiscount] = useState('');
 
   const handleSelectDiscount = (discount) => {
     setSelectedDiscount(discount);
+  };
+
+  const handleApplyDiscount = (discount) => {
+    Alert.alert(`${discount} Discount applied!`);
   };
 
   return (
@@ -34,7 +38,12 @@ export default function DiscountsScreen({ navigation }) {
             {selectedDiscount === '10%' ? '✔ ' : ''} 10% Discount on your next order
           </Text>
           {selectedDiscount === '10%' && (
-            <Text style={styles.details}>Use Now!</Text>
+            <TouchableOpacity
+              style={styles.applyButton}
+              onPress={() => handleApplyDiscount('10%')}
+            >
+              <Text style={styles.applyButtonText}>Applied</Text>
+            </TouchableOpacity>
           )}
         </TouchableOpacity>
 
@@ -49,7 +58,12 @@ export default function DiscountsScreen({ navigation }) {
             {selectedDiscount === '30%' ? '✔ ' : ''} Limited Offer: 30% off your next order
           </Text>
           {selectedDiscount === '30%' && (
-            <Text style={styles.details}>Use Now!</Text>
+            <TouchableOpacity
+              style={styles.applyButton}
+              onPress={() => handleApplyDiscount('30%')}
+            >
+              <Text style={styles.applyButtonText}>Applied</Text>
+            </TouchableOpacity>
           )}
         </TouchableOpacity>
 
@@ -64,7 +78,12 @@ export default function DiscountsScreen({ navigation }) {
             {selectedDiscount === '60%' ? '✔ ' : ''} Get 60% off your next order
           </Text>
           {selectedDiscount === '60%' && (
-            <Text style={styles.details}>Use Code 3457!</Text>
+            <TouchableOpacity
+              style={styles.applyButton}
+              onPress={() => handleApplyDiscount('60%')}
+            >
+              <Text style={styles.applyButtonText}>Applied</Text>
+            </TouchableOpacity>
           )}
         </TouchableOpacity>
 
@@ -78,6 +97,14 @@ export default function DiscountsScreen({ navigation }) {
           <Text style={styles.discountText}>
             {selectedDiscount === 'EXPIRED' ? '✔ ' : ''} EXPIRED!!
           </Text>
+          {selectedDiscount === 'EXPIRED' && (
+            <TouchableOpacity
+              style={styles.applyButton}
+              onPress={() => handleApplyDiscount('EXPIRED')}
+            >
+              <Text style={styles.applyButtonText}>Applied</Text>
+            </TouchableOpacity>
+          )}
         </TouchableOpacity>
       </ScrollView>
     </View>
@@ -88,22 +115,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5', // Lighter background color
+    backgroundColor: '#f7f8fa',
   },
   navBar: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     marginBottom: 20,
-    paddingVertical: 12,
-    backgroundColor: '#ffffff',
-    borderRadius: 25,
+    paddingVertical: 10,
+    backgroundColor: '#fff',
+    borderRadius: 15,
     shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 5,
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
   },
   navItem: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
   },
@@ -113,19 +140,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     marginBottom: 15,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#fff',
     borderRadius: 15,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 3,
-    borderLeftWidth: 5,
-    borderLeftColor: '#ff914d', // Subtle left border
   },
   selectedDiscount: {
     borderColor: '#ff914d',
     borderWidth: 2,
-    backgroundColor: '#ffebd6', // Light highlight when selected
+    backgroundColor: '#ffebd6', // Light background color when selected
   },
   discountText: {
     fontSize: 16,
@@ -136,5 +161,15 @@ const styles = StyleSheet.create({
   details: {
     fontSize: 14,
     color: '#ff914d', // Highlighted color for details
+  },
+  applyButton: {
+    backgroundColor: '#ff914d',
+    borderRadius: 25,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+  },
+  applyButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
