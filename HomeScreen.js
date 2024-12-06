@@ -1,15 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 
 export default function HomeScreen({ navigation }) {
   const [selectedService, setSelectedService] = useState('');
-
-  useEffect(() => {
-    console.log("HomeScreen rendered");
-  }, []);
+  const [cheapestOptions, setCheapestOptions] = useState([]);
 
   const handleSelectService = (service) => {
     setSelectedService(service);
+
+    // Define the options for the cheapest items
+    const options = {
+      Deliveroo: ['Delivery Fee - €2.50'],
+      'Just Eats': ['Delivery Fee - €4.00 '],
+      'Uber Eats': ['Delivery Fee - €6.00'],
+    };
+
+    // Set the cheapest options for the selected service
+    setCheapestOptions(options[service] || []);
   };
 
   const handleDelivery = () => {
@@ -22,7 +29,12 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Home Screen</Text>
+      {/* Navigation Bar */}
+      <View style={styles.navBar}>
+        <Text style={styles.navItem}>Home</Text>
+        <Text style={styles.navItem} onPress={() => navigation.navigate('Discounts')}>Discount</Text>
+        <Text style={styles.navItem}>Profile</Text>
+      </View>
 
       {/* Search Bar */}
       <TextInput
@@ -40,7 +52,10 @@ export default function HomeScreen({ navigation }) {
           ]}
           onPress={() => handleSelectService('Deliveroo')}
         >
-          <Text style={styles.serviceText}>Deliveroo</Text>
+          <Text style={styles.serviceText}>
+            {selectedService === 'Deliveroo' ? '✔ ' : ''}Deliveroo
+          </Text>
+          <Text style={styles.serviceTime}>20 minutes</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -50,7 +65,10 @@ export default function HomeScreen({ navigation }) {
           ]}
           onPress={() => handleSelectService('Just Eats')}
         >
-          <Text style={styles.serviceText}>Just Eats</Text>
+          <Text style={styles.serviceText}>
+            {selectedService === 'Just Eats' ? '✔ ' : ''}Just Eats
+          </Text>
+          <Text style={styles.serviceTime}>45 minutes</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -60,7 +78,10 @@ export default function HomeScreen({ navigation }) {
           ]}
           onPress={() => handleSelectService('Uber Eats')}
         >
-          <Text style={styles.serviceText}>Uber Eats</Text>
+          <Text style={styles.serviceText}>
+            {selectedService === 'Uber Eats' ? '✔ ' : ''}Uber Eats
+          </Text>
+          <Text style={styles.serviceTime}>25 minutes</Text>
         </TouchableOpacity>
       </ScrollView>
 
@@ -69,7 +90,7 @@ export default function HomeScreen({ navigation }) {
         <Text style={styles.deliverButtonText}>Deliver</Text>
       </TouchableOpacity>
 
-      {/* View Discounts Button */}
+      {/* Navigate to Discounts Screen */}
       <TouchableOpacity
         style={styles.deliverButton}
         onPress={() => navigation.navigate('Discounts')} // Navigate to Discounts screen
@@ -86,11 +107,22 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#f7f8fa',
   },
-  title: {
-    fontSize: 24,
+  navBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 20,
+    paddingVertical: 10,
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  navItem: {
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
-    marginBottom: 20,
   },
   searchBar: {
     width: '100%',
@@ -101,21 +133,33 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     backgroundColor: '#fff',
     marginBottom: 20,
+    fontSize: 16,
+    color: '#333',
   },
   serviceItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 15,
     marginBottom: 15,
     backgroundColor: '#fff',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#ddd',
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  selectedService: {
+    borderColor: '#ff914d',
+    borderWidth: 2,
   },
   serviceText: {
     fontSize: 16,
     color: '#333',
   },
-  selectedService: {
-    backgroundColor: '#ff914d',
+  serviceTime: {
+    fontSize: 14,
+    color: '#888',
   },
   deliverButton: {
     width: '100%',
@@ -125,6 +169,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 25,
     marginTop: 20,
+    shadowColor: '#ff914d',
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
+    elevation: 5,
   },
   deliverButtonText: {
     color: '#fff',

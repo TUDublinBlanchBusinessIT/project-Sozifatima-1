@@ -1,38 +1,85 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 
 export default function DiscountsScreen({ navigation }) {
+  const [selectedDiscount, setSelectedDiscount] = useState('');
+
+  const handleSelectDiscount = (discount) => {
+    setSelectedDiscount(discount);
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Discounts</Text>
-
-      <View style={styles.discountContainer}>
-        <Text style={styles.discountTitle}>10% Discount</Text>
-        <Text style={styles.discountDetail}>Get 10% off next time you place an order.</Text>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Use Now</Text>
+      {/* Navigation Bar */}
+      <View style={styles.navBar}>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <Text style={styles.navItem}>Home</Text>
+        </TouchableOpacity>
+        <Text style={styles.navItem}>Discount</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+          <Text style={styles.navItem}>Profile</Text>
         </TouchableOpacity>
       </View>
 
-      <View style={styles.discountContainer}>
-        <Text style={styles.discountTitle}>Limited Offer!</Text>
-        <Text style={styles.discountDetail}>Get 30% off your order if placed in the next 24 hours.</Text>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Use Now</Text>
+      <ScrollView>
+        {/* Discount Options */}
+        <TouchableOpacity
+          style={[
+            styles.discountItem,
+            selectedDiscount === '10%' && styles.selectedDiscount,
+          ]}
+          onPress={() => handleSelectDiscount('10%')}
+        >
+          <Text style={styles.discountText}>
+            {selectedDiscount === '10%' ? '✔ ' : ''} 10% Discount next time you place an order
+          </Text>
+          {selectedDiscount === '10%' && (
+            <Text style={styles.details}>Use Now!</Text>
+          )}
         </TouchableOpacity>
-      </View>
 
-      <View style={styles.discountContainer}>
-        <Text style={styles.discountTitle}>Your next order just got better!</Text>
-        <Text style={styles.discountDetail}>Use code 3457 to get 60% off your next order.</Text>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Use Now</Text>
+        <TouchableOpacity
+          style={[
+            styles.discountItem,
+            selectedDiscount === '30%' && styles.selectedDiscount,
+          ]}
+          onPress={() => handleSelectDiscount('30%')}
+        >
+          <Text style={styles.discountText}>
+            {selectedDiscount === '30%' ? '✔ ' : ''} Limited Offer: 30% off your next order
+          </Text>
+          {selectedDiscount === '30%' && (
+            <Text style={styles.details}>Use Now!</Text>
+          )}
         </TouchableOpacity>
-      </View>
 
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Text style={styles.backButtonText}>Back</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.discountItem,
+            selectedDiscount === '60%' && styles.selectedDiscount,
+          ]}
+          onPress={() => handleSelectDiscount('60%')}
+        >
+          <Text style={styles.discountText}>
+            {selectedDiscount === '60%' ? '✔ ' : ''} Get 60% off your next order
+          </Text>
+          {selectedDiscount === '60%' && (
+            <Text style={styles.details}>Use Code 3457!</Text>
+          )}
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.discountItem,
+            selectedDiscount === 'EXPIRED' && styles.selectedDiscount,
+          ]}
+          onPress={() => handleSelectDiscount('EXPIRED')}
+        >
+          <Text style={styles.discountText}>
+            {selectedDiscount === 'EXPIRED' ? '✔ ' : ''} EXPIRED!!
+          </Text>
+        </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 }
@@ -41,54 +88,48 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#FFF',
+    backgroundColor: '#f7f8fa',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+  navBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     marginBottom: 20,
-    textAlign: 'center',
-  },
-  discountContainer: {
-    marginBottom: 20,
-    backgroundColor: '#f7f7f7',
-    borderRadius: 10,
-    padding: 15,
+    paddingVertical: 10,
+    backgroundColor: '#fff',
+    borderRadius: 15,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 3,
   },
-  discountTitle: {
-    fontSize: 18,
+  navItem: {
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
   },
-  discountDetail: {
+  discountItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 15,
+    marginBottom: 15,
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  selectedDiscount: {
+    borderColor: '#ff914d',
+    borderWidth: 2,
+  },
+  discountText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  details: {
     fontSize: 14,
-    color: '#555',
-    marginBottom: 10,
-  },
-  button: {
-    backgroundColor: '#FF9933',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#FFF',
-    fontWeight: 'bold',
-  },
-  backButton: {
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: '#FF9933',
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  backButtonText: {
-    color: '#FFF',
-    fontWeight: 'bold',
+    color: '#888',
   },
 });

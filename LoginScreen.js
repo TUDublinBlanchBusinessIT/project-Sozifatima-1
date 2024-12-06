@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, Image } fro
 import { signInWithEmailAndPassword } from 'firebase/auth'; // Firebase Authentication
 import { auth } from './firebaseconfig'; // Import Firebase auth from firebaseconfig.js
 
-export default function LoginScreen({ navigation }) {
+export default function SignInScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
