@@ -31,7 +31,7 @@ export default function DiscountsScreen({ navigation }) {
           onPress={() => handleSelectDiscount('10%')}
         >
           <Text style={styles.discountText}>
-            {selectedDiscount === '10%' ? '✔ ' : ''} 10% Discount next time you place an order
+            {selectedDiscount === '10%' ? '✔ ' : ''} 10% Discount on your next order
           </Text>
           {selectedDiscount === '10%' && (
             <Text style={styles.details}>Use Now!</Text>
@@ -88,22 +88,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f7f8fa',
+    backgroundColor: '#f5f5f5', // Lighter background color
   },
   navBar: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     marginBottom: 20,
-    paddingVertical: 10,
-    backgroundColor: '#fff',
-    borderRadius: 15,
+    paddingVertical: 12,
+    backgroundColor: '#ffffff',
+    borderRadius: 25,
     shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5,
   },
   navItem: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
   },
@@ -111,25 +111,30 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 15,
+    padding: 20,
     marginBottom: 15,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
     borderRadius: 15,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 3,
+    borderLeftWidth: 5,
+    borderLeftColor: '#ff914d', // Subtle left border
   },
   selectedDiscount: {
     borderColor: '#ff914d',
     borderWidth: 2,
+    backgroundColor: '#ffebd6', // Light highlight when selected
   },
   discountText: {
     fontSize: 16,
+    fontWeight: '500',
     color: '#333',
+    flex: 1,
   },
   details: {
     fontSize: 14,
-    color: '#888',
+    color: '#ff914d', // Highlighted color for details
   },
 });
