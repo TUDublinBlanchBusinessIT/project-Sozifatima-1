@@ -4,85 +4,76 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 
 export default function HomeScreen({ navigation }) {
   const [selectedService, setSelectedService] = useState('');
   const [cheapestOptions, setCheapestOptions] = useState([]);
+  const [searchText, setSearchText] = useState('');
+  const [deliveryOptionsVisible, setDeliveryOptionsVisible] = useState(false);
 
+  // Handle service selection
   const handleSelectService = (service) => {
     setSelectedService(service);
-
-    // Define the options for the cheapest items
+    // Define options for the cheapest delivery prices based on the selected service
     const options = {
       Deliveroo: ['Delivery Fee - €2.50'],
-      'Just Eats': ['Delivery Fee - €4.00 '],
+      'Just Eats': ['Delivery Fee - €4.00'],
       'Uber Eats': ['Delivery Fee - €6.00'],
     };
 
     // Set the cheapest options for the selected service
     setCheapestOptions(options[service] || []);
-
-    // Automatically navigate to the Discounts screen after selection
+    // Navigate to the Discount page when service is selected
     navigation.navigate('Discounts');
+  };
+
+  // Handle Eircode change
+  const handleEircodeChange = (text) => {
+    setSearchText(text);
+    // Show delivery options when Eircode is entered
+    if (text.length > 0) {
+      setDeliveryOptionsVisible(true);
+    } else {
+      setDeliveryOptionsVisible(false);
+    }
   };
 
   return (
     <View style={styles.container}>
-      {/* Navigation Bar */}
-      <View style={styles.navBar}>
-        <Text style={styles.navItem}>Home</Text>
-        <Text style={styles.navItem} onPress={() => navigation.navigate('Discounts')}>Discount</Text>
-        <Text style={styles.navItem}>Profile</Text>
-      </View>
-
       {/* Search Bar */}
       <TextInput
         style={styles.searchBar}
-        placeholder="Enter Your Address or Eircode"
-        placeholderTextColor="#aaa"
+        placeholder="Enter Your Eircode"
+        value={searchText}
+        onChangeText={handleEircodeChange}
       />
 
-      {/* Delivery Services */}
-      <ScrollView>
-        <TouchableOpacity
-          style={[
-            styles.serviceItem,
-            selectedService === 'Deliveroo' && styles.selectedService,
-          ]}
-          onPress={() => handleSelectService('Deliveroo')}
-        >
-          <Text style={styles.serviceText}>
-            {selectedService === 'Deliveroo' ? '✔ ' : ''}Deliveroo
-          </Text>
-          <Text style={styles.serviceTime}>20 minutes</Text>
-        </TouchableOpacity>
+      {/* Delivery Options */}
+      {deliveryOptionsVisible && (
+        <ScrollView style={styles.deliveryOptions}>
+          <TouchableOpacity
+            style={styles.deliveryItem}
+            onPress={() => handleSelectService('Deliveroo')}
+          >
+            <Text style={styles.deliveryText}>Deliveroo - 20 minutes - €2.50</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.deliveryItem}
+            onPress={() => handleSelectService('Uber Eats')}
+          >
+            <Text style={styles.deliveryText}>Uber Eats - 25 minutes - €4.00</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.deliveryItem}
+            onPress={() => handleSelectService('Just Eats')}
+          >
+            <Text style={styles.deliveryText}>Just Eats - 45 minutes - €6.00</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      )}
 
-        <TouchableOpacity
-          style={[
-            styles.serviceItem,
-            selectedService === 'Just Eats' && styles.selectedService,
-          ]}
-          onPress={() => handleSelectService('Just Eats')}
-        >
-          <Text style={styles.serviceText}>
-            {selectedService === 'Just Eats' ? '✔ ' : ''}Just Eats
-          </Text>
-          <Text style={styles.serviceTime}>45 minutes</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[
-            styles.serviceItem,
-            selectedService === 'Uber Eats' && styles.selectedService,
-          ]}
-          onPress={() => handleSelectService('Uber Eats')}
-        >
-          <Text style={styles.serviceText}>
-            {selectedService === 'Uber Eats' ? '✔ ' : ''}Uber Eats
-          </Text>
-          <Text style={styles.serviceTime}>25 minutes</Text>
-        </TouchableOpacity>
-      </ScrollView>
-
-      {/* Deliver Button */}
-      <TouchableOpacity style={styles.deliverButton} onPress={() => alert('Please select a service first!')}>
-        <Text style={styles.deliverButtonText}>Deliver</Text>
+      {/* Confirm Delivery Button */}
+      <TouchableOpacity
+        style={styles.deliverButton}
+        onPress={() => navigation.navigate('Discounts')} // Navigate to Discounts screen
+      >
+        <Text style={styles.deliverButtonText}>Confirm Delivery</Text>
       </TouchableOpacity>
     </View>
   );
@@ -93,23 +84,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#f7f8fa',
-  },
-  navBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 20,
-    paddingVertical: 10,
-    backgroundColor: '#fff',
-    borderRadius: 15,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
-  },
-  navItem: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
   },
   searchBar: {
     width: '100%',
@@ -123,43 +97,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
-  serviceItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  deliveryOptions: {
+    marginBottom: 20,
+  },
+  deliveryItem: {
     padding: 15,
-    marginBottom: 15,
+    marginBottom: 10,
     backgroundColor: '#fff',
-    borderRadius: 15,
-    shadowColor: '#000',
+    borderRadius: 10,
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 3,
   },
-  selectedService: {
-    borderColor: '#ff914d',
-    borderWidth: 2,
-  },
-  serviceText: {
+  deliveryText: {
     fontSize: 16,
     color: '#333',
   },
-  serviceTime: {
-    fontSize: 14,
-    color: '#888',
-  },
   deliverButton: {
-    width: '100%',
-    height: 50,
+    padding: 15,
     backgroundColor: '#ff914d',
-    justifyContent: 'center',
+    borderRadius: 10,
     alignItems: 'center',
-    borderRadius: 25,
     marginTop: 20,
-    shadowColor: '#ff914d',
-    shadowOpacity: 0.4,
-    shadowRadius: 8,
-    elevation: 5,
   },
   deliverButtonText: {
     color: '#fff',
