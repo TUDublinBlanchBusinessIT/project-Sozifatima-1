@@ -17,14 +17,9 @@ export default function HomeScreen({ navigation }) {
 
     // Set the cheapest options for the selected service
     setCheapestOptions(options[service] || []);
-  };
 
-  const handleDelivery = () => {
-    if (selectedService) {
-      alert(`You selected ${selectedService}!`);
-    } else {
-      alert('Please select a delivery service!');
-    }
+    // Automatically navigate to the Discounts screen after selection
+    navigation.navigate('Discounts');
   };
 
   return (
@@ -57,13 +52,6 @@ export default function HomeScreen({ navigation }) {
           </Text>
           <Text style={styles.serviceTime}>20 minutes</Text>
         </TouchableOpacity>
-        {selectedService === 'Deliveroo' && (
-          <View style={styles.price}>
-            {cheapestOptions.map((option, index) => (
-              <Text key={index} style={styles.priceText}>{option}</Text>
-            ))}
-          </View>
-        )}
 
         <TouchableOpacity
           style={[
@@ -77,13 +65,6 @@ export default function HomeScreen({ navigation }) {
           </Text>
           <Text style={styles.serviceTime}>45 minutes</Text>
         </TouchableOpacity>
-        {selectedService === 'Just Eats' && (
-          <View style={styles.price}>
-            {cheapestOptions.map((option, index) => (
-              <Text key={index} style={styles.priceText}>{option}</Text>
-            ))}
-          </View>
-        )}
 
         <TouchableOpacity
           style={[
@@ -97,17 +78,10 @@ export default function HomeScreen({ navigation }) {
           </Text>
           <Text style={styles.serviceTime}>25 minutes</Text>
         </TouchableOpacity>
-        {selectedService === 'Uber Eats' && (
-          <View style={styles.price}>
-            {cheapestOptions.map((option, index) => (
-              <Text key={index} style={styles.priceText}>{option}</Text>
-            ))}
-          </View>
-        )}
       </ScrollView>
 
       {/* Deliver Button */}
-      <TouchableOpacity style={styles.deliverButton} onPress={handleDelivery}>
+      <TouchableOpacity style={styles.deliverButton} onPress={() => alert('Please select a service first!')}>
         <Text style={styles.deliverButtonText}>Deliver</Text>
       </TouchableOpacity>
     </View>
@@ -173,14 +147,6 @@ const styles = StyleSheet.create({
   serviceTime: {
     fontSize: 14,
     color: '#888',
-  },
-  price: {
-    paddingLeft: 20,
-    paddingTop: 10,
-  },
-  priceText: {
-    fontSize: 14,
-    color: '#555',
   },
   deliverButton: {
     width: '100%',

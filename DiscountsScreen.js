@@ -3,13 +3,33 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'rea
 
 export default function DiscountsScreen({ navigation }) {
   const [selectedDiscount, setSelectedDiscount] = useState('');
+  const [selectedService, setSelectedService] = useState('');
 
-  const handleSelectDiscount = (discount) => {
+  // Handle Discount Selection
+  const handleSelectDiscount = (discount, service) => {
     setSelectedDiscount(discount);
+    setSelectedService(service);
+
+    // Show Alert when a discount is applied
+    Alert.alert(
+      'Discount Applied',
+      `${discount} discount has been applied to ${service}!`
+    );
   };
 
-  const handleApplyDiscount = (discount) => {
-    Alert.alert(`${discount} Discount applied!`);
+  // Handle Delivery Button Click
+  const handleDelivery = () => {
+    if (selectedService && selectedDiscount) {
+      Alert.alert(
+        'Delivery Selected',
+        `You have selected ${selectedService} with the ${selectedDiscount} discount applied!`
+      );
+    } else {
+      Alert.alert(
+        'No Selection',
+        'Please select a discount and a service before confirming delivery.'
+      );
+    }
   };
 
   return (
@@ -25,88 +45,68 @@ export default function DiscountsScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      <ScrollView>
-        {/* Discount Options */}
+      {/* Scrollable Discount Options */}
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        {/* Discount 10% */}
         <TouchableOpacity
           style={[
             styles.discountItem,
             selectedDiscount === '10%' && styles.selectedDiscount,
           ]}
-          onPress={() => handleSelectDiscount('10%')}
+          onPress={() => handleSelectDiscount('10%', 'Deliveroo')}
         >
           <Text style={styles.discountText}>
             {selectedDiscount === '10%' ? '✔ ' : ''} 10% Discount on your next order
           </Text>
-          {selectedDiscount === '10%' && (
-            <TouchableOpacity
-              style={styles.applyButton}
-              onPress={() => handleApplyDiscount('10%')}
-            >
-              <Text style={styles.applyButtonText}>Applied</Text>
-            </TouchableOpacity>
-          )}
+          {selectedDiscount === '10%' && <Text style={styles.details}>Use Now!</Text>}
         </TouchableOpacity>
 
+        {/* Discount 30% */}
         <TouchableOpacity
           style={[
             styles.discountItem,
             selectedDiscount === '30%' && styles.selectedDiscount,
           ]}
-          onPress={() => handleSelectDiscount('30%')}
+          onPress={() => handleSelectDiscount('30%', 'Just Eats')}
         >
           <Text style={styles.discountText}>
-            {selectedDiscount === '30%' ? '✔ ' : ''} Limited Offer: 30% off your next order
+            {selectedDiscount === '30%' ? '✔ ' : ''} 30% off your next order (Limited Offer)
           </Text>
-          {selectedDiscount === '30%' && (
-            <TouchableOpacity
-              style={styles.applyButton}
-              onPress={() => handleApplyDiscount('30%')}
-            >
-              <Text style={styles.applyButtonText}>Applied</Text>
-            </TouchableOpacity>
-          )}
+          {selectedDiscount === '30%' && <Text style={styles.details}>Use Now!</Text>}
         </TouchableOpacity>
 
+        {/* Discount 60% */}
         <TouchableOpacity
           style={[
             styles.discountItem,
             selectedDiscount === '60%' && styles.selectedDiscount,
           ]}
-          onPress={() => handleSelectDiscount('60%')}
+          onPress={() => handleSelectDiscount('60%', 'Uber Eats')}
         >
           <Text style={styles.discountText}>
             {selectedDiscount === '60%' ? '✔ ' : ''} Get 60% off your next order
           </Text>
-          {selectedDiscount === '60%' && (
-            <TouchableOpacity
-              style={styles.applyButton}
-              onPress={() => handleApplyDiscount('60%')}
-            >
-              <Text style={styles.applyButtonText}>Applied</Text>
-            </TouchableOpacity>
-          )}
+          {selectedDiscount === '60%' && <Text style={styles.details}>Use Code: 3457</Text>}
         </TouchableOpacity>
 
+        {/* Discount Expired */}
         <TouchableOpacity
           style={[
             styles.discountItem,
             selectedDiscount === 'EXPIRED' && styles.selectedDiscount,
           ]}
-          onPress={() => handleSelectDiscount('EXPIRED')}
+          onPress={() => handleSelectDiscount('EXPIRED', 'Uber Eats')}
         >
           <Text style={styles.discountText}>
-            {selectedDiscount === 'EXPIRED' ? '✔ ' : ''} EXPIRED!!
+            {selectedDiscount === 'EXPIRED' ? '✔ ' : ''} EXPIRED!
           </Text>
-          {selectedDiscount === 'EXPIRED' && (
-            <TouchableOpacity
-              style={styles.applyButton}
-              onPress={() => handleApplyDiscount('EXPIRED')}
-            >
-              <Text style={styles.applyButtonText}>Applied</Text>
-            </TouchableOpacity>
-          )}
         </TouchableOpacity>
       </ScrollView>
+
+      {/* Deliver Button */}
+      <TouchableOpacity style={styles.deliverButton} onPress={handleDelivery}>
+        <Text style={styles.deliverButtonText}>Confirm Delivery</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -134,12 +134,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
+  scrollContainer: {
+    paddingBottom: 20,
+  },
   discountItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 20,
-    marginBottom: 15,
+    padding: 15,
+    marginBottom: 25,
     backgroundColor: '#fff',
     borderRadius: 15,
     shadowColor: '#000',
@@ -150,26 +153,31 @@ const styles = StyleSheet.create({
   selectedDiscount: {
     borderColor: '#ff914d',
     borderWidth: 2,
-    backgroundColor: '#ffebd6', // Light background color when selected
   },
   discountText: {
     fontSize: 16,
-    fontWeight: '500',
     color: '#333',
-    flex: 1,
   },
   details: {
     fontSize: 14,
-    color: '#ff914d', // Highlighted color for details
+    color: '#888',
   },
-  applyButton: {
+  deliverButton: {
+    width: '100%',
+    height: 50,
     backgroundColor: '#ff914d',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 25,
-    paddingVertical: 8,
-    paddingHorizontal: 20,
+    marginTop: 20,
+    shadowColor: '#ff914d',
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
+    elevation: 5,
   },
-  applyButtonText: {
+  deliverButtonText: {
     color: '#fff',
+    fontSize: 18,
     fontWeight: 'bold',
   },
 });
