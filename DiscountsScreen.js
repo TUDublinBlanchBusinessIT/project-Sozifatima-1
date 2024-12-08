@@ -53,11 +53,19 @@ export default function DiscountsScreen({ navigation }) {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.discountItem, selectedDiscount === 'EXPIRED' && styles.selectedDiscount]}
-          onPress={() => handleSelectDiscount('EXPIRED')}
+          style={[styles.discountItem, selectedDiscount === '25%' && styles.selectedDiscount]}
+          onPress={() => handleSelectDiscount('25%')}
         >
-          <Text style={styles.discountText}>EXPIRED!!</Text>
+          <Text style={styles.discountText}>25% Discount on your next order</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.discountItem, selectedDiscount === '15%' && styles.selectedDiscount]}
+          onPress={() => handleSelectDiscount('15%')}
+        >
+          <Text style={styles.discountText}>15% Discount on your next order</Text>
+        </TouchableOpacity>
+        
 
       </ScrollView>
 
